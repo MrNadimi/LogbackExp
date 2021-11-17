@@ -1,0 +1,56 @@
+plugins {
+    id 'java'
+}
+
+group 'com.mrnadimi'
+version '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.0'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.0'
+
+    /*
+     * https://www.baeldung.com/slf4j-with-log4j2-logback
+     * slf4j
+     * Log4j2
+     * https://logging.apache.org/log4j/2.x/maven-artifacts.html
+     */
+    /*implementation 'org.apache.logging.log4j:log4j-slf4j-impl:2.14.0'
+    implementation group: 'org.apache.logging.log4j', name: 'log4j-api', version: '2.14.0'
+    implementation group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.14.0'*/
+
+    //implementation 'org.slf4j:slf4j-api:1.7.32'
+    //implementation 'ch.qos.logback:logback-core:1.2.7'
+
+    implementation 'ch.qos.logback:logback-classic:1.2.6'
+
+    /**
+     * For colored console on windows OS
+     */
+    implementation 'org.fusesource.jansi:jansi:1.11'
+}
+
+test {
+    useJUnitPlatform()
+}
+
+jar {
+    manifest {
+        attributes(
+                'Main-Class': 'com.mrnadimi.logger.MainClass'
+        )
+    }
+    from {
+        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+}
+
+task execute(type:JavaExec){
+    main = "com.mrnadimi.logger.MainClass"
+    classpath = sourceSets.main.runtimeClasspath
+    standardInput = System.in
+}
